@@ -2,6 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TelecomAPI.Controllers;
 using TelecomAPI.Models;
+using TelecomAPI.Exceptions;
 
 namespace TelecomAPITests
 {
@@ -24,19 +25,35 @@ namespace TelecomAPITests
         }
 
         [TestMethod]
+        public void GetAllNumbers_Additions()
+        {
+            //arrange
+            _controller.Put(0, "01234567890");
+            _controller.Put(0, "12345678901");
+            _controller.Put(0, "23456789012");
+
+            var result = _controller.Get();
+            Assert.IsTrue(result.Value.Count == 3);
+        }
+
+        [TestMethod]
         public void GetAllNumbersForValidCustomer()
         {
             int validCustomerId = 0;
+            _controller.Put(validCustomerId, "01234567890");
+
             var result = _controller.Get(validCustomerId);
             Assert.IsTrue(result.Value.Count > -1);
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidCustomerException))]
         public void GetAllNumbersForInvalidCustomer()
         {
-            int invalidCustomerId = 0;
+            int invalidCustomerId = 1000;
+            _controller.Put(0, "01234567890");
+
             var result = _controller.Get(invalidCustomerId);
-            Assert.IsNull(result.Value);
         }
 
         [TestMethod]
@@ -47,7 +64,7 @@ namespace TelecomAPITests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidNumberException))]
         public void ActivateInvalidNumber_TooLong()
         {
             string invalidNumber = "01234567890000";
@@ -55,7 +72,7 @@ namespace TelecomAPITests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidNumberException))]
         public void ActivateInvalidNumber_TooShort()
         {
             string invalidNumber = "0123456";
@@ -63,7 +80,7 @@ namespace TelecomAPITests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidNumberException))]
         public void ActivateInvalidNumber_NotNumber()
         {
             string invalidNumber = "01234aaa890";
@@ -71,7 +88,7 @@ namespace TelecomAPITests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidNumberException))]
         public void ActivateInvalidNumber_EmptyNumber()
         {
             string invalidNumber = "";
@@ -79,11 +96,20 @@ namespace TelecomAPITests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidNumberException))]
         public void ActivateInvalidNumber_MissingNumber()
         {
             string invalidNumber = null;
             _controller.Put(0, invalidNumber);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidNumberException))]
+        public void ActivateInvalidNumber_DuplicateNumber()
+        {
+            string invalidNumber = "00000000000";
+            _controller.Put(0, invalidNumber);
+            _controller.Put(1, invalidNumber);
         }
 
     }
