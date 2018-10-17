@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TelecomAPI.Models;
 
 namespace TelecomAPI.Controllers
 {
@@ -10,36 +11,25 @@ namespace TelecomAPI.Controllers
     [ApiController]
     public class NumbersController : ControllerBase
     {
-        // GET api/values
+        // GET api/numbers
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<List<Number>> Get()
         {
-            return new string[] { "value1", "value2" };
+            throw new NotImplementedException();
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        // GET api/numbers/3
+        [HttpGet("{customerId}")]
+        public ActionResult<List<Number>> Get(int customerId)
         {
-            return "value";
+            throw new NotImplementedException();
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // PUT api/numbers/3
+        [HttpPut("{customerId}")]
+        public void Put(int customerId, [FromBody] string number)
         {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            throw new NotImplementedException();
         }
     }
 }
